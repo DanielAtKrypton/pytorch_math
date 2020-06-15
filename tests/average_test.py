@@ -65,7 +65,7 @@ def test_average_7():
     result = pm.average(data, axis=1, weights=weights)
     expected_result = torch.Tensor([0.75, 2.75, 4.75])
     assert (result == expected_result).all()
-    
+
 def test_average_8():
     """test_average_8
     """
