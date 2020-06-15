@@ -34,7 +34,7 @@ setuptools.setup(
             'twine',
         ],
         'test': [
-            'pytest',
+            'pytest>=4.6',
             'pytest-cov',
         ],
         'docs': [
