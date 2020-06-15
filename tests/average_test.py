@@ -65,3 +65,16 @@ def test_average_7():
     result = pm.average(data, axis=1, weights=weights)
     expected_result = torch.Tensor([0.75, 2.75, 4.75])
     assert (result == expected_result).all()
+    
+def test_average_8():
+    """test_average_8
+    """
+    data = torch.arange(6).reshape((3, 2))
+    weights = torch.Tensor([1./4, 3./4])
+    try:
+        pm.average(data, weights=weights, axis=0)
+        raise Exception("Should have raised an exception!")
+    # pylint: disable=broad-except
+    except Exception as exception:
+        assert type(exception).__name__ == 'ValueError'
+        assert str(exception) == "Length of weights not compatible with specified axis."

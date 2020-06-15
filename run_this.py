@@ -1,11 +1,11 @@
 import torch
 import pytorch_math as pm
 
-def test_average_6():
-    """test_average_6
+def test_average_8():
+    """test_average_8
     """
     data = torch.arange(6).reshape((3, 2))
-    weights = torch.Tensor([[1, 2], [3, 4]])
+    weights = torch.Tensor([1./4, 3./4])
     try:
         pm.average(data, weights=weights, axis=1)
         raise Exception("Should have raised an exception!")
@@ -15,5 +15,5 @@ def test_average_6():
         assert str(exception) == "1D weights expected when shapes of a and weights differ."
 
 if __name__ == "__main__":
-    test_average_6()
+    test_average_8()
     pass
