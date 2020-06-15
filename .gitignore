@@ -1,2 +1,18 @@
-.env
-.vscode/
+# Virtualenv
+/.env/
+
+# Package
+*.egg-info
+
+# Compiled python
+__pycache__/
+
+# Pytest cache
+.pytest_cache/
+
+# Vscode
+/.vscode
+
+# Package build
+/build
+/dist
