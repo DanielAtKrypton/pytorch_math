@@ -168,6 +168,6 @@ def average(a, axis=None, weights=None, returned=False):
     if returned:
         if scl.shape != avg.shape:
             # scl = np.broadcast_to(scl, avg.shape).copy()
-            raise ValueError("feature not implemented yet")
+            scl = torch.broadcast_tensors(scl, avg)[0]
         return avg, scl
     return avg
