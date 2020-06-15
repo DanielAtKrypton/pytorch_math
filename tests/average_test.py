@@ -20,9 +20,6 @@ def test_average_3():
     """
     data = torch.arange(6).reshape((3, 2))
     weights = torch.Tensor([1./4, 3./4])
-    result = pm.average(data, axis=1, weights=weights)
-    expected_result = torch.Tensor([0.75, 2.75, 4.75])
-    assert (result == expected_result).all()
     try:
         pm.average(data, weights=weights)
         raise Exception("Should have raised an exception!")
@@ -38,3 +35,33 @@ def test_average_4():
     w = torch.ones(5, dtype=torch.float32)
     avg = pm.average(a, weights=w)
     assert avg.dtype == torch.float64
+
+def test_average_5():
+    """test_average_5
+    """
+    data = torch.arange(6).reshape((3, 2))
+    result = pm.average(data, axis=1)
+    expected_result = torch.Tensor([0.5, 2.5, 4.5])
+    assert (result == expected_result).all()
+
+def test_average_6():
+    """test_average_6
+    """
+    data = torch.arange(6).reshape((3, 2))
+    weights = torch.Tensor([[1, 2], [3, 4]])
+    try:
+        pm.average(data, weights=weights, axis=1)
+        raise Exception("Should have raised an exception!")
+    # pylint: disable=broad-except
+    except Exception as exception:
+        assert type(exception).__name__ == 'TypeError'
+        assert str(exception) == "1D weights expected when shapes of a and weights differ."
+
+def test_average_7():
+    """test_average_7
+    """
+    data = torch.arange(6).reshape((3, 2))
+    weights = torch.Tensor([1./4, 3./4])
+    result = pm.average(data, axis=1, weights=weights)
+    expected_result = torch.Tensor([0.75, 2.75, 4.75])
+    assert (result == expected_result).all()
