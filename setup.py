@@ -8,7 +8,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pytorch_math",
-    version="0.0.1",
+    version="0.0.2",
     author="Daniel Kaminski de Souza",
     author_email="daniel@kryptonunite.com",
     description="Pytorch Math",
