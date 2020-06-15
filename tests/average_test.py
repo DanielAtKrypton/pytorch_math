@@ -102,3 +102,12 @@ def test_average_10():
     expected_scl = torch.Tensor([1., 1., 1.])
     assert (result_avg == expected_avg).all()
     assert (result_scl == expected_scl).all()
+    
+def test_average_11():
+    """test_average_11
+    """
+    data = torch.arange(6, dtype=torch.float).reshape((3, 2))
+    weights = torch.Tensor([1./4, 3./4])
+    result_avg = pm.average(data, axis=1, weights=weights)
+    expected_avg = torch.Tensor([0.75, 2.75, 4.75])
+    assert (result_avg == expected_avg).all()
