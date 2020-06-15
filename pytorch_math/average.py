@@ -115,18 +115,17 @@ def average(a, axis=None, weights=None, returned=False):
         avg = a.mean(**kwargs)
         # scl = avg.dtype.type(a.size/avg.size)
         # pylint: disable=not-callable
-        scl = torch.tensor(a.numpy().size/avg.numpy().size, dtype=avg.dtype)
+        scl = torch.tensor(a.cpu().numpy().size/avg.cpu().numpy().size, dtype=avg.dtype)
     else:
         # wgt = np.asanyarray(weights)
         wgt = weights
 
         # if issubclass(a.dtype.type, (np.integer, np.bool_)):
         # REVIEW isn't there a better way to perform this check?
-        if issubclass(a.numpy().dtype.type, (np.integer, np.bool_)):
+        if issubclass(a.cpu().numpy().dtype.type, (np.integer, np.bool_)):
             # result_dtype = np.result_type(a.dtype, wgt.dtype, 'f8')
             type_examples = [a, wgt, torch.Tensor([0]).type(torch.float64)]
             result_dtype = result_type(type_examples)
-            # result_dtype = get_result_type_2_by_2(type_examples)
         else:
             # result_dtype = np.result_type(a.dtype, wgt.dtype)
             result_dtype = torch.result_type(a, wgt)
@@ -163,6 +162,14 @@ def average(a, axis=None, weights=None, returned=False):
                 "Weights sum to zero, can't be normalized")
 
         # avg = np.multiply(a, wgt, dtype=result_dtype).sum(axis)/scl
+        if wgt.device.type != a.device.type:
+            args_list = [a, wgt, scl]
+            for idx, arg in enumerate(args_list):
+                if arg.device.type != 'cpu':
+                    args_list[idx] = arg.cpu()
+            a = args_list[0]
+            wgt = args_list[1]
+            scl = args_list[2]
         avg = a.type(result_dtype).mul(wgt).sum(**base_kwargs)/scl
 
     if returned:
