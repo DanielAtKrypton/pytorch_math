@@ -78,3 +78,16 @@ def test_average_8():
     except Exception as exception:
         assert type(exception).__name__ == 'ValueError'
         assert str(exception) == "Length of weights not compatible with specified axis."
+
+def test_average_9():
+    """test_average_9
+    """
+    data = torch.arange(6).reshape((3, 2))
+    weights = torch.Tensor([1./4, -1./4])
+    try:
+        pm.average(data, weights=weights, axis=1)
+        raise Exception("Should have raised an exception!")
+    # pylint: disable=broad-except
+    except Exception as exception:
+        assert type(exception).__name__ == 'ZeroDivisionError'
+        assert str(exception) == "Weights sum to zero, can't be normalized"
