@@ -120,15 +120,13 @@ def average(a, axis=None, weights=None, returned=False):
         # wgt = np.asanyarray(weights)
         wgt = weights
 
+        type_examples = [a, wgt]
         # if issubclass(a.dtype.type, (np.integer, np.bool_)):
         # REVIEW isn't there a better way to perform this check?
         if issubclass(a.cpu().numpy().dtype.type, (np.integer, np.bool_)):
             # result_dtype = np.result_type(a.dtype, wgt.dtype, 'f8')
-            type_examples = [a, wgt, torch.Tensor([0]).type(torch.float64)]
-            result_dtype = result_type(type_examples)
-        else:
-            # result_dtype = np.result_type(a.dtype, wgt.dtype)
-            result_dtype = torch.result_type(a, wgt)
+            type_examples.append(torch.Tensor([0]).type(torch.float64))
+        result_dtype = result_type(type_examples)
 
         # Sanity checks
         if a.shape != wgt.shape:

@@ -1,9 +1,12 @@
 """main test
 """
-import torch
 from unittest import TestCase
-import pytorch_math as pm
+
 import numpy as np
+import torch
+
+import pytorch_math as pm
+
 
 class TestFailureModule(TestCase):
     """TestFailureModule
