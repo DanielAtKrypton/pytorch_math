@@ -3,6 +3,7 @@
 import torch
 from unittest import TestCase
 import pytorch_math as pm
+import numpy as np
 
 class TestFailureModule(TestCase):
     """TestFailureModule
@@ -54,6 +55,23 @@ class TestFailureModule(TestCase):
             str(error.exception),
             "Weights sum to zero, can't be normalized"
         )
+
+def test_average_0():
+    """test_average_0
+    """
+    X = np.random.rand(5, 5)
+    avg_np, _ = np.average(X, axis=1, returned=True)
+
+    X_th = torch.tensor(X)
+    avg_th, _ = pm.average(X_th, axis=1, returned=True)
+
+    assert (X == X_th.numpy()).all()
+    assert (avg_np == avg_th.numpy()).all()
+
+    X -= avg_np[:, None]
+    X_th -= avg_th[:, None]
+
+    assert (X == X_th.numpy()).all()
 
 def test_average_1():
     """test_average_1
