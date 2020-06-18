@@ -1,8 +1,59 @@
 """main test
 """
 import torch
-
+from unittest import TestCase
 import pytorch_math as pm
+
+class TestFailureModule(TestCase):
+    """TestFailureModule
+    """
+    def test_average_3(self):
+        """test_average_3
+        """
+        data = torch.arange(6).reshape((3, 2))
+        weights = torch.Tensor([1./4, 3./4])
+        with self.assertRaises(TypeError) as error:
+            pm.average(data, weights=weights)
+        self.assertEqual(
+            str(error.exception),
+            "Axis must be specified when shapes of a and weights differ."
+        )
+
+    def test_average_6(self):
+        """test_average_6
+        """
+        data = torch.arange(6).reshape((3, 2))
+        weights = torch.Tensor([[1, 2], [3, 4]])
+        with self.assertRaises(TypeError) as error:
+            pm.average(data, weights=weights, axis=1)
+        self.assertEqual(
+            str(error.exception),
+            "1D weights expected when shapes of a and weights differ."
+        )
+
+    def test_average_8(self):
+        """test_average_8
+        """
+        data = torch.arange(6).reshape((3, 2))
+        weights = torch.Tensor([1./4, 3./4])
+        with self.assertRaises(ValueError) as error:
+            pm.average(data, weights=weights, axis=0)
+        self.assertEqual(
+            str(error.exception),
+            "Length of weights not compatible with specified axis."
+        )
+
+    def test_average_9(self):
+        """test_average_9
+        """
+        data = torch.arange(6).reshape((3, 2))
+        weights = torch.Tensor([1./4, -1./4])
+        with self.assertRaises(ZeroDivisionError) as error:
+            pm.average(data, weights=weights, axis=1)
+        self.assertEqual(
+            str(error.exception),
+            "Weights sum to zero, can't be normalized"
+        )
 
 def test_average_1():
     """test_average_1
@@ -14,19 +65,6 @@ def test_average_2():
     """test_average_2
     """
     assert pm.average(torch.arange(1, 11), weights=torch.arange(10, 0, -1)) == 4
-
-def test_average_3():
-    """test_average_3
-    """
-    data = torch.arange(6).reshape((3, 2))
-    weights = torch.Tensor([1./4, 3./4])
-    try:
-        pm.average(data, weights=weights)
-        raise Exception("Should have raised an exception!")
-    # pylint: disable=broad-except
-    except Exception as exception:
-        assert type(exception).__name__ == 'TypeError'
-        assert str(exception) == "Axis must be specified when shapes of a and weights differ."
 
 def test_average_4():
     """test_average_4
@@ -44,19 +82,6 @@ def test_average_5():
     expected_result = torch.Tensor([0.5, 2.5, 4.5])
     assert (result == expected_result).all()
 
-def test_average_6():
-    """test_average_6
-    """
-    data = torch.arange(6).reshape((3, 2))
-    weights = torch.Tensor([[1, 2], [3, 4]])
-    try:
-        pm.average(data, weights=weights, axis=1)
-        raise Exception("Should have raised an exception!")
-    # pylint: disable=broad-except
-    except Exception as exception:
-        assert type(exception).__name__ == 'TypeError'
-        assert str(exception) == "1D weights expected when shapes of a and weights differ."
-
 def test_average_7():
     """test_average_7
     """
@@ -65,32 +90,6 @@ def test_average_7():
     result = pm.average(data, axis=1, weights=weights)
     expected_result = torch.Tensor([0.75, 2.75, 4.75])
     assert (result == expected_result).all()
-
-def test_average_8():
-    """test_average_8
-    """
-    data = torch.arange(6).reshape((3, 2))
-    weights = torch.Tensor([1./4, 3./4])
-    try:
-        pm.average(data, weights=weights, axis=0)
-        raise Exception("Should have raised an exception!")
-    # pylint: disable=broad-except
-    except Exception as exception:
-        assert type(exception).__name__ == 'ValueError'
-        assert str(exception) == "Length of weights not compatible with specified axis."
-
-def test_average_9():
-    """test_average_9
-    """
-    data = torch.arange(6).reshape((3, 2))
-    weights = torch.Tensor([1./4, -1./4])
-    try:
-        pm.average(data, weights=weights, axis=1)
-        raise Exception("Should have raised an exception!")
-    # pylint: disable=broad-except
-    except Exception as exception:
-        assert type(exception).__name__ == 'ZeroDivisionError'
-        assert str(exception) == "Weights sum to zero, can't be normalized"
 
 def test_average_10():
     """test_average_10
