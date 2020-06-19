@@ -5,7 +5,7 @@
 *.egg-info
 
 # Compiled python
-__pycache__/
+__pycache__
 
 # Pytest cache
 .pytest_cache/
