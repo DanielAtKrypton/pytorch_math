@@ -27,6 +27,7 @@ setuptools.setup(
     ],
     extras_require={
         'dev': [
+            'pip-tools',
             'pylint',
             'pep8',
             'autopep8',
