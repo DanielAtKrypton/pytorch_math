@@ -1,63 +1,55 @@
 """main test
 """
-from unittest import TestCase
-
+import pytest
 import numpy as np
 import torch
 
 import pytorch_math as pm
 
 
-class TestFailureModule(TestCase):
-    """TestFailureModule
+def test_average_3():
+    """test_average_3
     """
-    def test_average_3(self):
-        """test_average_3
-        """
-        data = torch.arange(6).reshape((3, 2))
-        weights = torch.Tensor([1./4, 3./4])
-        with self.assertRaises(TypeError) as error:
-            pm.average(data, weights=weights)
-        self.assertEqual(
-            str(error.exception),
-            "Axis must be specified when shapes of a and weights differ."
-        )
+    data = torch.arange(6).reshape((3, 2))
+    weights = torch.Tensor([1./4, 3./4])
+    with pytest.raises(TypeError) as error:
+        pm.average(data, weights=weights)
+    assert error.match(
+        "Axis must be specified when shapes of a and weights differ."
+    )
 
-    def test_average_6(self):
-        """test_average_6
-        """
-        data = torch.arange(6).reshape((3, 2))
-        weights = torch.Tensor([[1, 2], [3, 4]])
-        with self.assertRaises(TypeError) as error:
-            pm.average(data, weights=weights, axis=1)
-        self.assertEqual(
-            str(error.exception),
-            "1D weights expected when shapes of a and weights differ."
-        )
+def test_average_6():
+    """test_average_6
+    """
+    data = torch.arange(6).reshape((3, 2))
+    weights = torch.Tensor([[1, 2], [3, 4]])
+    with pytest.raises(TypeError) as error:
+        pm.average(data, weights=weights, axis=1)
+    assert error.match(
+        "1D weights expected when shapes of a and weights differ."
+    )
 
-    def test_average_8(self):
-        """test_average_8
-        """
-        data = torch.arange(6).reshape((3, 2))
-        weights = torch.Tensor([1./4, 3./4])
-        with self.assertRaises(ValueError) as error:
-            pm.average(data, weights=weights, axis=0)
-        self.assertEqual(
-            str(error.exception),
-            "Length of weights not compatible with specified axis."
-        )
+def test_average_8():
+    """test_average_8
+    """
+    data = torch.arange(6).reshape((3, 2))
+    weights = torch.Tensor([1./4, 3./4])
+    with pytest.raises(ValueError) as error:
+        pm.average(data, weights=weights, axis=0)
+    assert error.match(
+        "Length of weights not compatible with specified axis."
+    )
 
-    def test_average_9(self):
-        """test_average_9
-        """
-        data = torch.arange(6).reshape((3, 2))
-        weights = torch.Tensor([1./4, -1./4])
-        with self.assertRaises(ZeroDivisionError) as error:
-            pm.average(data, weights=weights, axis=1)
-        self.assertEqual(
-            str(error.exception),
-            "Weights sum to zero, can't be normalized"
-        )
+def test_average_9():
+    """test_average_9
+    """
+    data = torch.arange(6).reshape((3, 2))
+    weights = torch.Tensor([1./4, -1./4])
+    with pytest.raises(ZeroDivisionError) as error:
+        pm.average(data, weights=weights, axis=1)
+    assert error.match(
+        "Weights sum to zero, can't be normalized"
+    )
 
 def test_average_0():
     """test_average_0

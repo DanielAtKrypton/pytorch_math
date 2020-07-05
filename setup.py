@@ -23,11 +23,10 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'torch'
+        'torch===1.5.0'
     ],
     extras_require={
         'dev': [
-            'pip-tools',
             'pylint',
             'pep8',
             'autopep8',
