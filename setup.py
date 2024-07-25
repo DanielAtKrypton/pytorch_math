@@ -23,7 +23,7 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'torch===1.5.0'
+        'torch===2.2.0'
     ],
     extras_require={
         'dev': [
